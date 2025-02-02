@@ -51,7 +51,7 @@ class CalculateItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'JK',
+                            'Jenis Kelamin',
                             style: mediumPoppinsFontStyle.copyWith(
                               color: darkGrayColor,
                               fontSize: 12,
@@ -89,33 +89,14 @@ class CalculateItem extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'TB',
+                            'TB/BB',
                             style: mediumPoppinsFontStyle.copyWith(
                               color: darkGrayColor,
                               fontSize: 12,
                             ),
                           ),
                           Text(
-                            result.height.toString(),
-                            style: mediumPoppinsFontStyle.copyWith(
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 21),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'BB',
-                            style: mediumPoppinsFontStyle.copyWith(
-                              color: darkGrayColor,
-                              fontSize: 12,
-                            ),
-                          ),
-                          Text(
-                            result.weight.toString(),
+                            "${result.height}/${result.weight}",
                             style: mediumPoppinsFontStyle.copyWith(
                               fontSize: 12,
                             ),

@@ -27,7 +27,7 @@ class Product {
         score: data['score'] != null ? data['score']['evaluation'] : '',
         reasoning: data['score'] != null ? data['score']['reasoning'] : '',
         nutrients: data['nutrition'] != null
-            ? (data['nutrition']['nutrients'] as List)
+            ? (data['nutrition'] as List)
                 .map((e) => Nutrient.fromJson(e))
                 .toList()
             : [],
@@ -55,29 +55,34 @@ class Product {
 
 class Nutrient {
   final String name;
-  final String unit;
   final num amount;
+  final String unit;
+  final String description;
 
   const Nutrient({
     required this.name,
-    required this.unit,
     required this.amount,
+    required this.unit,
+    required this.description,
   });
 
   factory Nutrient.fromJson(Map<String, dynamic> data) => Nutrient(
         name: data['name'],
-        unit: data['unit'],
         amount: data['amount'],
+        unit: data['unit'],
+        description: data['description'],
       );
 
   Nutrient copyWith({
     String? name,
-    String? unit,
     num? amount,
+    String? unit,
+    String? description,
   }) =>
       Nutrient(
         name: name ?? this.name,
-        unit: unit ?? this.unit,
         amount: amount ?? this.amount,
+        unit: unit ?? this.unit,
+        description: description ?? this.description,
       );
 }

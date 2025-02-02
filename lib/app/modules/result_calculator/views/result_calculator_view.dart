@@ -87,7 +87,13 @@ ${result.mealRecommendations.map((e) => "- ${e.name}: ${e.calories} kcal").join(
             () => Padding(
               padding: const EdgeInsets.all(defaultPadding),
               child: controller.selectedIndex.value == 0
-                  ? Text(controller.result.notes)
+                  ? Text(
+                      controller.result.notes,
+                      textAlign: TextAlign.justify,
+                      style: regularPoppinsFontStyle.copyWith(
+                        fontSize: 16,
+                      ),
+                    )
                   : Column(
                       children: [
                         Text(

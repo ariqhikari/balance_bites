@@ -103,19 +103,29 @@ class HomeView extends StatelessWidget {
               Obx(
                 () => mainController.isLoading.value == true
                     ? Center(child: makeLoadingIndicator())
-                    : GridView.count(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12,
-                        physics:
-                            const NeverScrollableScrollPhysics(), // Disable GridView scrolling
-                        shrinkWrap: true, // Prevent infinite size error
-                        childAspectRatio: (1 / 1.3),
-                        children: [
-                          for (var product in mainController.products)
-                            _buildProductCard(product),
-                        ],
-                      ),
+                    : mainController.products.isEmpty
+                        ? Center(
+                            child: Text(
+                              'Produk tidak ditemukan.',
+                              style: regularPoppinsFontStyle.copyWith(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          )
+                        : GridView.count(
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12,
+                            physics:
+                                const NeverScrollableScrollPhysics(), // Disable GridView scrolling
+                            shrinkWrap: true, // Prevent infinite size error
+                            childAspectRatio: (1 / 1.3),
+                            children: [
+                              for (var product in mainController.products)
+                                _buildProductCard(product),
+                            ],
+                          ),
               ),
               const SizedBox(height: 100),
             ],

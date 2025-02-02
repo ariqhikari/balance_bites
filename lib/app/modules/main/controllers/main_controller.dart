@@ -2,6 +2,7 @@ import 'package:balance_bites/app/data/data.dart';
 import 'package:balance_bites/app/modules/user/user_controller.dart';
 import 'package:balance_bites/app/routes/app_pages.dart';
 import 'package:balance_bites/app/services/services.dart';
+import 'package:balance_bites/app/shared/shared.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -52,6 +53,20 @@ class MainController extends GetxController {
   }
 
   void calculateCalories() async {
+    if (selectedGender.value.isEmpty) {
+      showSnackBar("Pilih jenis kelamin terlebih dahulu");
+      return;
+    } else if (ageController.text.isEmpty) {
+      showSnackBar("Isi umur terlebih dahulu");
+      return;
+    } else if (heightController.text.isEmpty) {
+      showSnackBar("Isi tinggi badan terlebih dahulu");
+      return;
+    } else if (weightController.text.isEmpty) {
+      showSnackBar("Isi berat badan terlebih dahulu");
+      return;
+    }
+
     isLoading.value = true;
     ApiReturnValue<CalorieCalculator> result =
         await CalculatorServices.calculateCalories(
@@ -77,18 +92,4 @@ class MainController extends GetxController {
       historyCalculations.assignAll(result.value!);
     }
   }
-
-  // Future<void> onPickImage() async {
-  //   final picker = ImagePicker();
-
-  //   final pickedFile = await picker.pickImage(source: ImageSource.camera);
-
-  //   if (pickedFile != null) {
-  //     imageFile.value = pickedFile;
-  //     imagePath.value = pickedFile.path;
-
-  //     print('Image Path: $imagePath');
-  //     print('Image File: $imageFile');
-  //   }
-  // }
 }

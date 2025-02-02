@@ -31,7 +31,7 @@ class ResultProductView extends GetView<ResultProductController> {
 - Deskripsi: ${product.reasoning}
 
 Nutrisi:
-${product.nutrients.map((e) => "- ${e.name}: ${e.amount}${e.unit}").join("\n")}
+${product.nutrients.map((e) => "- ${e.name}: ${e.amount}${e.unit}\n${e.description}").join("\n")}
 
 Gambar Produk:
 ${product.imageUrl}
@@ -65,13 +65,13 @@ ${product.imageUrl}
                             child: Text(
                               '?',
                               style:
-                                  boldPoppinsFontStyle.copyWith(fontSize: 48),
+                                  boldPoppinsFontStyle.copyWith(fontSize: 72),
                             ),
                           ),
                           Container(
                             height: 84,
                             margin: EdgeInsets.only(
-                              top: MediaQuery.of(context).size.height / 3.2,
+                              top: 40,
                               left: defaultMargin,
                               right: defaultMargin,
                             ),
@@ -209,35 +209,60 @@ ${product.imageUrl}
                               () => Padding(
                                 padding: const EdgeInsets.all(defaultPadding),
                                 child: controller.selectedIndex.value == 0
-                                    ? Text(controller.product.value!.reasoning!)
+                                    ? Text(
+                                        controller.product.value!.reasoning!,
+                                        textAlign: TextAlign.justify,
+                                        style: regularPoppinsFontStyle.copyWith(
+                                          fontSize: 16,
+                                        ),
+                                      )
                                     : Column(
                                         children: [
                                           for (var nutrient in controller
                                               .product.value!.nutrients)
                                             Padding(
                                               padding: const EdgeInsets.only(
-                                                  bottom: 8),
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
+                                                  bottom: 14),
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    nutrient.name,
-                                                    style:
-                                                        regularPoppinsFontStyle
-                                                            .copyWith(
-                                                      fontSize: 16,
-                                                    ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        nutrient.name,
+                                                        style:
+                                                            regularPoppinsFontStyle
+                                                                .copyWith(
+                                                          color: blackColor,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        nutrient.amount
+                                                                .toString() +
+                                                            nutrient.unit,
+                                                        style:
+                                                            regularPoppinsFontStyle
+                                                                .copyWith(
+                                                          color: blackColor,
+                                                          fontSize: 16,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
+                                                  const SizedBox(height: 6),
                                                   Text(
-                                                    nutrient.amount.toString() +
-                                                        nutrient.unit,
+                                                    nutrient.description,
+                                                    textAlign:
+                                                        TextAlign.justify,
                                                     style:
                                                         regularPoppinsFontStyle
                                                             .copyWith(
-                                                      fontSize: 16,
-                                                    ),
+                                                                fontSize: 14),
                                                   ),
                                                 ],
                                               ),

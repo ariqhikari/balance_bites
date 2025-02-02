@@ -31,7 +31,7 @@ class ProductServices {
     return fetchData<List<Product>>(
       endpoint: 'products',
       queryParams: {
-        'search': search?.isNotEmpty == true ? search! : 'chocolate'
+        'search': search?.isNotEmpty == true ? search! : 'ice cream',
       },
       fromJson: (data) => (data['products'] as List)
           .map((product) => Product.fromJson(product))
