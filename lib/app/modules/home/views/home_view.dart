@@ -18,118 +18,143 @@ class HomeView extends StatelessWidget {
       color: grayColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // * Header
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Hi, ${mainController.userController.user.value.name}',
-                        style: semiBoldPoppinsFontStyle.copyWith(fontSize: 20),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        DateFormat('EEEE, d MMMM y').format(DateTime.now()),
-                        style: regularPoppinsFontStyle.copyWith(fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: 40,
-                    height: 40,
-                    child: ButtonTransparent(
-                      onTap: () {
-                        showModalBottomSheet(
-                          context: context,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(16)),
-                          ),
-                          backgroundColor: whiteColor,
-                          isScrollControlled: true,
-                          useSafeArea: true,
-                          builder: (context) => ModalBottomSheet(
-                            title: "Apakah Anda Yakin Keluar?",
-                            isBack: false,
-                            content: Column(
-                              children: [
-                                SvgPicture.asset(
-                                    "assets/images/illustration_logout.svg"),
-                                const SizedBox(height: 24),
-                                Button(
-                                  text: "Yakin",
-                                  buttonStyle: makeButton(redColor),
-                                  onTap: () {
-                                    Get.offAllNamed(Routes.SIGN_IN);
-                                    removeToken();
-                                  },
-                                ),
-                                const SizedBox(height: 12),
-                                OutlineButton(
-                                  text: "Batal",
-                                  onTap: () => Get.back(),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                      borderRadius: BorderRadius.circular(8),
-                      color: 'FFC9C9'.toColor(),
-                      child: Center(
-                        child: SvgPicture.asset("assets/icons/ic_logout.svg"),
-                      ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // * Header
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Hi, ${mainController.userController.user.value.name}',
+                      style: semiBoldPoppinsFontStyle.copyWith(fontSize: 20),
                     ),
-                  ),
-                ],
-              ),
-              // * Search
-              const SizedBox(height: 24),
-              InputText(
-                isSuffix: true,
-                controller: mainController.searchController,
-                hint: "Cari produk...",
-                onSubmit: () => mainController.getProducts(),
-              ),
-              const SizedBox(height: 16),
-              // * Products
-              Obx(
-                () => mainController.isLoading.value == true
-                    ? Center(child: makeLoadingIndicator())
-                    : mainController.products.isEmpty
-                        ? Center(
-                            child: Text(
-                              'Produk tidak ditemukan.',
-                              style: regularPoppinsFontStyle.copyWith(
-                                fontSize: 16,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          )
-                        : GridView.count(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 12,
-                            crossAxisSpacing: 12,
-                            physics:
-                                const NeverScrollableScrollPhysics(), // Disable GridView scrolling
-                            shrinkWrap: true, // Prevent infinite size error
-                            childAspectRatio: (1 / 1.3),
+                    const SizedBox(height: 4),
+                    Text(
+                      DateFormat('EEEE, d MMMM y').format(DateTime.now()),
+                      style: regularPoppinsFontStyle.copyWith(fontSize: 14),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: ButtonTransparent(
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.vertical(top: Radius.circular(16)),
+                        ),
+                        backgroundColor: whiteColor,
+                        isScrollControlled: true,
+                        useSafeArea: true,
+                        builder: (context) => ModalBottomSheet(
+                          title: "Apakah Anda Yakin Keluar?",
+                          isBack: false,
+                          content: Column(
                             children: [
-                              for (var product in mainController.products)
-                                _buildProductCard(product),
+                              SvgPicture.asset(
+                                  "assets/images/illustration_logout.svg"),
+                              const SizedBox(height: 24),
+                              Button(
+                                text: "Yakin",
+                                buttonStyle: makeButton(redColor),
+                                onTap: () {
+                                  Get.offAllNamed(Routes.SIGN_IN);
+                                  removeToken();
+                                },
+                              ),
+                              const SizedBox(height: 12),
+                              OutlineButton(
+                                text: "Batal",
+                                onTap: () => Get.back(),
+                              ),
                             ],
                           ),
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(8),
+                    color: 'FFC9C9'.toColor(),
+                    child: Center(
+                      child: SvgPicture.asset("assets/icons/ic_logout.svg"),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            // * Search
+            const SizedBox(height: 24),
+            InputText(
+              isSuffix: true,
+              controller: mainController.searchController,
+              hint: "Cari produk...",
+              onSubmit: () => mainController.getProducts(),
+            ),
+            const SizedBox(height: 16),
+            // * Products
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  mainController.getProducts();
+                },
+                child: Obx(
+                  () {
+                    if (mainController.isLoading.value &&
+                        !mainController.isLoadingMore.value) {
+                      return Center(child: makeLoadingIndicator());
+                    } else if (mainController.products.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'Produk tidak ditemukan.',
+                          style: regularPoppinsFontStyle.copyWith(
+                            fontSize: 16,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      );
+                    } else {
+                      return GridView.builder(
+                        controller: mainController.scrollController,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 12,
+                          crossAxisSpacing: 12,
+                          childAspectRatio: 1 / 1.3,
+                        ),
+                        itemCount: mainController.products.length +
+                            (mainController.hasMoreData ? 1 : 0),
+                        itemBuilder: (context, index) {
+                          if (index < mainController.products.length) {
+                            return _buildProductCard(
+                                mainController.products[index]);
+                          } else {
+                            // Tampilkan loading indicator di bagian bawah
+                            return Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: Center(
+                                child: mainController.isLoadingMore.value
+                                    ? makeLoadingIndicator()
+                                    : const Text('Tidak ada data lagi'),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    }
+                  },
+                ),
               ),
-              const SizedBox(height: 100),
-            ],
-          ),
+            ),
+            const SizedBox(height: 100),
+          ],
         ),
       ),
     );
@@ -137,17 +162,15 @@ class HomeView extends StatelessWidget {
 
   Widget _buildProductCard(Product product) {
     return ButtonTransparent(
-      onTap: () => Get.toNamed(Routes.RESULT_PRODUCT, arguments: product.id),
+      onTap: () => Get.toNamed(Routes.RESULT_PRODUCT, arguments: product.upc),
       borderRadius: BorderRadius.circular(12),
       color: whiteColor,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 12,
-        ),
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            // Gambar Produk
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12),
@@ -163,13 +186,52 @@ class HomeView extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 12),
+
+            // Nama Produk
             Text(
               product.title.length > 20
                   ? "${product.title.substring(0, 20)}..."
                   : product.title,
-              style: mediumPoppinsFontStyle.copyWith(fontSize: 16),
+              style: mediumPoppinsFontStyle.copyWith(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.center,
             ),
+
+            // Brand
+            if (product.brand.isNotEmpty && product.labels.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                product.brand,
+                style: regularPoppinsFontStyle.copyWith(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                product.labels,
+                style: regularPoppinsFontStyle.copyWith(
+                  fontSize: 12,
+                  color: Colors.green[700],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ], // Jika hanya brand atau label yang ada
+            if (product.brand.isNotEmpty && product.labels.isEmpty) ...[
+              const SizedBox(height: 4),
+              Text(
+                product.brand,
+                style: regularPoppinsFontStyle.copyWith(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ]
           ],
         ),
       ),

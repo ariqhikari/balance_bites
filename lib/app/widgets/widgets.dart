@@ -20,3 +20,4 @@ part 'white_app_bar.dart';
 part 'custom_tabbar.dart';
 part 'calculate_item.dart';
 part 'modal_bottom_sheet.dart';
+part 'info_card.dart';

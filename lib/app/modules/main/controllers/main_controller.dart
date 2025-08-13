@@ -12,6 +12,7 @@ class MainController extends GetxController {
   late PageController pageController;
   var selectedPage = 0.obs;
   RxBool isLoading = false.obs;
+  RxBool isLoadingMore = false.obs; // loading saat load more
 
   final TextEditingController searchController = TextEditingController();
 
@@ -20,7 +21,7 @@ class MainController extends GetxController {
   final TextEditingController heightController = TextEditingController();
   final TextEditingController weightController = TextEditingController();
 
-  var products = [].obs;
+  var products = <Product>[].obs;
 
   var imagePath = ''.obs;
   var imageFile = Rx<XFile?>(null);
@@ -28,27 +29,63 @@ class MainController extends GetxController {
   // * history
   var historyCalculations = [].obs;
 
+  // Pagination variables
+  int currentPage = 1;
+  bool hasMoreData = true;
+
+  ScrollController scrollController = ScrollController();
+
   @override
   void onInit() {
     pageController = PageController(initialPage: selectedPage.value);
     getProducts();
+    getHistoryCalculations();
+
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        getProducts(loadMore: true);
+      }
+    });
+
     super.onInit();
   }
 
   @override
   void onClose() {
+    scrollController.dispose();
     searchController.dispose();
     super.onClose();
   }
 
-  void getProducts() async {
-    isLoading.value = true;
-    ApiReturnValue<List<Product>> result =
-        await ProductServices.getListProduct(searchController.text);
+  Future<void> getProducts({bool loadMore = false}) async {
+    if (loadMore) {
+      if (isLoadingMore.value || !hasMoreData) return;
+      isLoadingMore.value = true;
+      currentPage++;
+    } else {
+      isLoading.value = true;
+      currentPage = 1;
+      hasMoreData = true;
+    }
 
-    isLoading.value = false;
+    ApiReturnValue<List<Product>> result = await ProductServices.getListProduct(
+      search: searchController.text,
+      page: currentPage,
+    );
+
+    if (loadMore) {
+      isLoadingMore.value = false;
+    } else {
+      isLoading.value = false;
+    }
+
     if (result.value != null) {
-      products.assignAll(result.value!);
+      if (loadMore) {
+        products.addAll(result.value!);
+      } else {
+        products.assignAll(result.value!);
+      }
     }
   }
 

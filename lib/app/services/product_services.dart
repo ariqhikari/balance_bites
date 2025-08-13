@@ -27,29 +27,24 @@ class ProductServices {
     return ApiReturnValue(value: fromJson(data['body']['data']));
   }
 
-  static Future<ApiReturnValue<List<Product>>> getListProduct(String? search) {
+  static Future<ApiReturnValue<List<Product>>> getListProduct({
+    String? search,
+    int page = 1,
+  }) {
     return fetchData<List<Product>>(
       endpoint: 'products',
       queryParams: {
-        'search': search?.isNotEmpty == true ? search! : 'ice cream',
+        'search': search?.isNotEmpty == true ? search! : '',
+        'page': page.toString(),
       },
-      fromJson: (data) => (data['products'] as List)
-          .map((product) => Product.fromJson(product))
-          .toList(),
-    );
-  }
-
-  static Future<ApiReturnValue<Product>> getProductById(String id) {
-    return fetchData<Product>(
-      endpoint: 'product',
-      queryParams: {'id': id},
-      fromJson: (data) => Product.fromJson(data['product']),
+      fromJson: (data) =>
+          (data as List).map((product) => Product.fromJson(product)).toList(),
     );
   }
 
   static Future<ApiReturnValue<Product>> getProductByUpc(String upc) {
     return fetchData<Product>(
-      endpoint: 'product-upc',
+      endpoint: 'product',
       queryParams: {'upc': upc},
       fromJson: (data) => Product.fromJson(data['product']),
     );

@@ -1,29 +1,35 @@
 part of 'data.dart';
 
 class Product {
-  final int id;
+  final String upc;
   final String title;
+  final String brand;
+  final String labels;
+  final String quantity;
   final String imageUrl;
-  final String? upc;
   final String? score;
   final String? reasoning;
   final List<Nutrient> nutrients;
 
   const Product({
-    required this.id,
+    required this.upc,
     required this.title,
+    required this.brand,
+    required this.labels,
+    required this.quantity,
     required this.imageUrl,
-    this.upc,
     this.score,
     this.reasoning,
     required this.nutrients,
   });
 
   factory Product.fromJson(Map<String, dynamic> data) => Product(
-        id: data['id'] is String ? data['idSpoonacular'] : data['id'],
-        title: data['title'],
-        imageUrl: data['image'],
         upc: data['upc'],
+        title: data['title'],
+        brand: data['brand'] ?? '',
+        labels: data['labels'] != null ? data['labels'].split(',')[0] : '',
+        quantity: data['quantity'] ?? '',
+        imageUrl: data['image'],
         score: data['score'] != null ? data['score']['evaluation'] : '',
         reasoning: data['score'] != null ? data['score']['reasoning'] : '',
         nutrients: data['nutrition'] != null
@@ -34,19 +40,23 @@ class Product {
       );
 
   Product copyWith({
-    int? id,
-    String? title,
-    String? imageUrl,
     String? upc,
+    String? title,
+    String? brand,
+    String? labels,
+    String? quantity,
+    String? imageUrl,
     String? score,
     String? reasoning,
     List<Nutrient>? nutrients,
   }) =>
       Product(
-        id: id ?? this.id,
-        title: title ?? this.title,
-        imageUrl: imageUrl ?? this.imageUrl,
         upc: upc ?? this.upc,
+        title: title ?? this.title,
+        brand: brand ?? this.brand,
+        labels: labels ?? this.labels,
+        quantity: quantity ?? this.quantity,
+        imageUrl: imageUrl ?? this.imageUrl,
         score: score ?? this.score,
         reasoning: reasoning ?? this.reasoning,
         nutrients: nutrients ?? this.nutrients,

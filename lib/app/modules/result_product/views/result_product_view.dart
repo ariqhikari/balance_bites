@@ -27,6 +27,8 @@ class ResultProductView extends GetView<ResultProductController> {
                 final product = controller.product.value!;
                 final shareText = """
 *Produk: ${product.title}*
+- Brand: ${product.brand}
+- Labels: ${product.labels}
 - Nutri-Score: ${product.score}
 - Deskripsi: ${product.reasoning}
 
@@ -195,6 +197,30 @@ ${product.imageUrl}
                               ),
                             ),
                             const SizedBox(height: 8),
+                            // Detail tambahan: brand, labels, quantity
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 24),
+                              child: Wrap(
+                                spacing: 8,
+                                runSpacing: 4,
+                                children: [
+                                  if (controller
+                                      .product.value!.brand.isNotEmpty)
+                                    InfoCard("Brand",
+                                        controller.product.value!.brand),
+                                  if (controller
+                                      .product.value!.labels.isNotEmpty)
+                                    InfoCard("Label",
+                                        controller.product.value!.labels),
+                                  if (controller
+                                      .product.value!.quantity.isNotEmpty)
+                                    InfoCard("Kuantitas",
+                                        controller.product.value!.quantity),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(height: 16),
                             // * Tabbar
                             Obx(
                               () => CustomTabBar(

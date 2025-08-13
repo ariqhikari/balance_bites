@@ -9,4 +9,4 @@ part 'product_services.dart';
 part 'calculator_services.dart';
 
 // String baseURL = 'http://10.0.2.2:8000';
-String baseURL = 'https://balancebites.auroraweb.id';
+String baseURL = 'https://balance.auroraweb.id';

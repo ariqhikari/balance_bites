@@ -23,10 +23,6 @@ class MainView extends GetView<MainController> {
                 controller: controller.pageController,
                 onPageChanged: (index) {
                   controller.selectedPage.value = index;
-
-                  if (index == 1) {
-                    controller.getHistoryCalculations();
-                  }
                 },
                 children: [
                   // * Home Page

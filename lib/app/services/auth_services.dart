@@ -31,6 +31,8 @@ class AuthServices {
     http.Client client = http.Client();
     String url = '$baseURL/api/auth/login';
 
+    print("URL: $url");
+
     var response = await client.post(
       Uri.parse(url),
       headers: {'Content-Type': 'application/json'},
@@ -62,6 +64,9 @@ class AuthServices {
     http.Client client = http.Client();
     String url = '$baseURL/api/auth/verify';
 
+    if (token == null) {
+      return ApiReturnValue(message: 'No token found');
+    }
     var response = await client.get(Uri.parse(url), headers: {
       'Content-Type': 'application/json',
       'token': token ?? '',
